@@ -1,0 +1,25 @@
+version: '3.1'
+
+services: 
+  web:
+    image: nginx
+    restart: always
+    volumes:
+      - './dist:/usr/share/nginx/html'
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=local_traefik_webgateway
+      - traefik.http.middlewares.localredirect.redirectscheme.scheme=https
+      - traefik.http.routers.${PROJECT_NAME}.rule=Host(`${URL}`)
+      - traefik.http.routers.${PROJECT_NAME}.entrypoints=http
+      - traefik.http.routers.${PROJECT_NAME}.middlewares=localredirect
+      - traefik.http.routers.${PROJECT_NAME}-secure.rule=Host(`${URL}`)
+      - traefik.http.routers.${PROJECT_NAME}-secure.entrypoints=https
+      - traefik.http.routers.${PROJECT_NAME}-secure.tls=true
+    networks:
+      - web
+
+networks:
+  web:
+    external:
+      name: local_traefik_webgateway  
