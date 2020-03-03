@@ -1,0 +1,14 @@
+
+@import '~reset-css/sass/reset';
+html,
+body,
+#site-content,
+.big-plaque {
+    height: 100%;
+}
+
+body {
+  position: relative;
+  background-color: red;
+
+}
