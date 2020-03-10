@@ -15,12 +15,7 @@ module.exports = env => {
 
   const cwp = devMode ? () => {} : new CleanWebpackPlugin();
   
-  
-  return {
-    entry: {
-      main: './src/index.js'
-    },
-    devtool: 'inline-source-map',
+  const devServer = devMode ? {} : {
     devServer: {
       host: dotenv.parsed.URL,
       https: {
@@ -30,7 +25,15 @@ module.exports = env => {
       allowedHosts: [
         dotenv.parsed.URL,
       ]
+    }
+  }
+  
+  return {
+    entry: {
+      main: './src/index.js'
     },
+    devtool: 'inline-source-map',
+    devServer,
     output: {
       filename: '[name].[contenthash].js',
       path: path.resolve(__dirname, 'dist'),
