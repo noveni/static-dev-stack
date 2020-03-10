@@ -1,4 +1,5 @@
 const path = require('path');
+const merge = require("webpack-merge");
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
@@ -15,8 +16,12 @@ module.exports = env => {
 
   const cwp = devMode ? () => {} : new CleanWebpackPlugin();
   
-  const devServer = !devMode ? {} : {
-    devServer: {
+  return {
+    entry: {
+      main: './src/index.js'
+    },
+    devtool: 'inline-source-map',
+    devServer: !devMode ? {} : {
       host: dotenv.parsed.URL,
       https: {
         key: fs.readFileSync('../../../_tools/traefik-proxy/devcerts/' + dotenv.parsed.URL + '+1-key.pem'),
@@ -25,15 +30,7 @@ module.exports = env => {
       allowedHosts: [
         dotenv.parsed.URL,
       ]
-    }
-  }
-  
-  return {
-    entry: {
-      main: './src/index.js'
     },
-    devtool: 'inline-source-map',
-    devServer,
     output: {
       filename: '[name].[contenthash].js',
       path: path.resolve(__dirname, 'dist'),
